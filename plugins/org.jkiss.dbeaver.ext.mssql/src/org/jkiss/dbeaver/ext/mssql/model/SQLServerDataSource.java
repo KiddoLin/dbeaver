@@ -93,10 +93,9 @@ public class SQLServerDataSource extends JDBCDataSource implements DBSInstanceCo
         return serverVersion;
     }
 
-    private boolean isNotBabelfishDatasource() {
-        boolean isBabelfish = SQLServerUtils.isDriverBabelfish(getContainer().getDriver());
-        return !isBabelfish;
-    }
+    public boolean isBabelfishDatasource() { return  SQLServerUtils.isDriverBabelfish(getContainer().getDriver()); }
+
+    private boolean isNotBabelfishDatasource() { return !this.isBabelfishDatasource(); }
 
     public boolean supportsTriggers() {
         return isNotBabelfishDatasource();

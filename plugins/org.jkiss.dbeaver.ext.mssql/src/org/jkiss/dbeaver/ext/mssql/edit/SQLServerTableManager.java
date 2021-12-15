@@ -18,17 +18,20 @@ package org.jkiss.dbeaver.ext.mssql.edit;
 
 import org.jkiss.code.NotNull;
 import org.jkiss.dbeaver.DBException;
+import org.jkiss.dbeaver.ext.mssql.SQLServerUtils;
 import org.jkiss.dbeaver.ext.mssql.model.*;
 import org.jkiss.dbeaver.model.DBConstants;
 import org.jkiss.dbeaver.model.DBPEvaluationContext;
 import org.jkiss.dbeaver.model.edit.DBECommandContext;
 import org.jkiss.dbeaver.model.edit.DBEPersistAction;
 import org.jkiss.dbeaver.model.exec.DBCExecutionContext;
+import org.jkiss.dbeaver.model.exec.DBCExecutionContextDefaults;
 import org.jkiss.dbeaver.model.impl.edit.SQLDatabasePersistAction;
 import org.jkiss.dbeaver.model.impl.sql.edit.SQLObjectEditor;
 import org.jkiss.dbeaver.model.impl.sql.edit.SQLStructEditor;
 import org.jkiss.dbeaver.model.messages.ModelMessages;
 import org.jkiss.dbeaver.model.runtime.DBRProgressMonitor;
+import org.jkiss.dbeaver.model.runtime.VoidProgressMonitor;
 import org.jkiss.dbeaver.model.struct.rdb.DBSTableIndex;
 import org.jkiss.utils.CommonUtils;
 
@@ -100,6 +103,17 @@ public class SQLServerTableManager extends SQLServerBaseTableManager<SQLServerTa
                     (!object.isView() && CommonUtils.getOption(options, OPTION_DELETE_CASCADE) ? " CASCADE CONSTRAINTS" : "")
             )
         );
+    }
+
+    @Override
+    public boolean canCreateObject(Object container) {
+        if (container instanceof SQLServerSchema) {
+            SQLServerSchema schema = (SQLServerSchema)container;
+            if (schema.getDataSource().isBabelfishDatasource() && SQLServerUtils.isNonDefaultDatabase(schema.getDatabase())) {
+               return false;
+            }
+        }
+        return super.canCreateObject(container);
     }
 
     @NotNull
