@@ -27,6 +27,7 @@ import org.jkiss.dbeaver.model.connection.DBPConnectionBootstrap;
 import org.jkiss.dbeaver.model.exec.DBCException;
 import org.jkiss.dbeaver.model.exec.DBCExecutionContextDefaults;
 import org.jkiss.dbeaver.model.exec.DBCExecutionPurpose;
+import org.jkiss.dbeaver.model.exec.DBCSession;
 import org.jkiss.dbeaver.model.exec.jdbc.JDBCResultSet;
 import org.jkiss.dbeaver.model.exec.jdbc.JDBCSession;
 import org.jkiss.dbeaver.model.exec.jdbc.JDBCStatement;
@@ -34,6 +35,7 @@ import org.jkiss.dbeaver.model.impl.jdbc.JDBCExecutionContext;
 import org.jkiss.dbeaver.model.impl.jdbc.JDBCRemoteInstance;
 import org.jkiss.dbeaver.model.runtime.DBRProgressMonitor;
 import org.jkiss.dbeaver.model.runtime.VoidProgressMonitor;
+import org.jkiss.dbeaver.model.struct.DBSObject;
 import org.jkiss.utils.CommonUtils;
 
 import java.sql.SQLException;
@@ -225,4 +227,27 @@ public class SQLServerExecutionContext extends JDBCExecutionContext implements D
     }
 */
 
+    @Override
+    public void prepareSessionForOperationsWithObject(DBCSession session, DBRProgressMonitor monitor, DBSObject object) {
+        switch (session.getPurpose()) {
+            case META:
+            case META_DDL:
+                if (object instanceof SQLServerSchema && session instanceof JDBCSession) {
+                    SQLServerSchema schema = (SQLServerSchema)object;
+                    if (schema.getDataSource().isBabelfishDatasource()) {
+                        try {
+                            SQLServerUtils.setCurrentDatabase((JDBCSession) session, schema.getDatabase().getName());
+                        } catch (SQLException ex) {
+                            // throw new DBCException("Failed to prepare session for operations with " + object.getName(), ex, this);
+                        }
+                    }
+                }
+                break;
+            case USER:
+            case USER_FILTERED:
+            case USER_SCRIPT:
+            case UTIL:
+            default:
+        }
+    }
 }

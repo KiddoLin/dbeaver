@@ -25,10 +25,7 @@ import org.jkiss.dbeaver.model.DBPDataSourceContainer;
 import org.jkiss.dbeaver.model.DBPDataSourceInfo;
 import org.jkiss.dbeaver.model.DBPExclusiveResource;
 import org.jkiss.dbeaver.model.connection.DBPConnectionConfiguration;
-import org.jkiss.dbeaver.model.exec.DBCExecutionContext;
-import org.jkiss.dbeaver.model.exec.DBCExecutionContextDefaults;
-import org.jkiss.dbeaver.model.exec.DBCExecutionPurpose;
-import org.jkiss.dbeaver.model.exec.DBCSession;
+import org.jkiss.dbeaver.model.exec.*;
 import org.jkiss.dbeaver.model.impl.AbstractExecutionContext;
 import org.jkiss.dbeaver.model.impl.SimpleExclusiveLock;
 import org.jkiss.dbeaver.model.meta.Association;
@@ -260,4 +257,7 @@ public class WMIDataSource implements DBPDataSource, DBSInstance, DBCExecutionCo
         return true;
     }
 
+    @Override
+    public void prepareSessionForOperationsWithObject(DBCSession session, DBRProgressMonitor monitor, DBSObject object) throws DBCException {
+    }
 }

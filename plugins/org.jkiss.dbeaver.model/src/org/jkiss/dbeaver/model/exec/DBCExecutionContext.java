@@ -24,6 +24,7 @@ import org.jkiss.dbeaver.model.DBPDataSource;
 import org.jkiss.dbeaver.model.DBPObject;
 import org.jkiss.dbeaver.model.runtime.DBRProgressMonitor;
 import org.jkiss.dbeaver.model.struct.DBSInstance;
+import org.jkiss.dbeaver.model.struct.DBSObject;
 
 /**
  * Execution context.
@@ -103,4 +104,9 @@ public interface DBCExecutionContext extends DBPObject,DBPCloseableObject
      */
     @Nullable
     DBCExecutionContextDefaults getContextDefaults();
+
+    /**
+     * Executes context preparations before operating with database object
+     */
+    void prepareSessionForOperationsWithObject(DBCSession session, DBRProgressMonitor monitor, DBSObject object) throws DBCException;
 }

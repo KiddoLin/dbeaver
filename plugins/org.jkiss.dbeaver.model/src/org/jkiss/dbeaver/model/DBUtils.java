@@ -1643,13 +1643,18 @@ public final class DBUtils {
         if (defaultContext == null) {
             throw new DBCException("Default context not found");
         }
-        return (T) defaultContext.openSession(monitor, DBCExecutionPurpose.META, task);
+        T session = (T) defaultContext.openSession(monitor, DBCExecutionPurpose.META, task);
+        defaultContext.prepareSessionForOperationsWithObject(session, monitor, object);
+        return session;
     }
 
     @SuppressWarnings("unchecked")
     @NotNull
     public static <T extends DBCSession> T openMetaSession(@NotNull DBRProgressMonitor monitor, @NotNull DBPDataSource dataSource, @NotNull String task) throws DBCException {
-        return (T) dataSource.getDefaultInstance().getDefaultContext(monitor, true).openSession(monitor, DBCExecutionPurpose.META, task);
+        DBCExecutionContext defaultContext = dataSource.getDefaultInstance().getDefaultContext(monitor, true);
+        T session = (T) defaultContext.openSession(monitor, DBCExecutionPurpose.META, task);
+        defaultContext.prepareSessionForOperationsWithObject(session, monitor, dataSource);
+        return session;
     }
 
     @SuppressWarnings("unchecked")
@@ -1659,7 +1664,9 @@ public final class DBUtils {
         if (defaultContext == null) {
             throw new DBCException("Default context not found");
         }
-        return (T) getOrOpenDefaultContext(object, false).openSession(monitor, DBCExecutionPurpose.UTIL, task);
+        T session = (T) getOrOpenDefaultContext(object, false).openSession(monitor, DBCExecutionPurpose.UTIL, task);
+        defaultContext.prepareSessionForOperationsWithObject(session, monitor, object);
+        return session;
     }
 
     public static void executeInMetaSession(@NotNull DBRProgressMonitor monitor, @NotNull DBSObject object, @NotNull String task,

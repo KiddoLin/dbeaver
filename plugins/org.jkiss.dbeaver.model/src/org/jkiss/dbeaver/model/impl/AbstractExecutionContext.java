@@ -24,6 +24,7 @@ import org.jkiss.dbeaver.model.connection.DBPConnectionBootstrap;
 import org.jkiss.dbeaver.model.exec.*;
 import org.jkiss.dbeaver.model.qm.QMUtils;
 import org.jkiss.dbeaver.model.runtime.DBRProgressMonitor;
+import org.jkiss.dbeaver.model.struct.DBSObject;
 import org.jkiss.dbeaver.utils.GeneralUtils;
 import org.jkiss.utils.CommonUtils;
 
@@ -135,4 +136,7 @@ public abstract class AbstractExecutionContext<DATASOURCE extends DBPDataSource>
         return dataSource.getName() + " - " + purpose;
     }
 
+    @Override
+    public void prepareSessionForOperationsWithObject(DBCSession session, DBRProgressMonitor monitor, DBSObject object) throws DBCException {
+    }
 }
