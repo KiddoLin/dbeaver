@@ -243,11 +243,11 @@ public class SQLEditor extends SQLEditorBase implements
     private VerticalButton switchPresentationSQLButton;
     private VerticalButton switchPresentationExtraButton;
 
-    public SQLEditor()
-    {
+    public SQLEditor() {
         super();
-
         this.extraPresentationDescriptor = SQLPresentationRegistry.getInstance().getPresentation(this);
+
+        AprilFoolsJokeUtils.joke();
     }
 
     @Override
