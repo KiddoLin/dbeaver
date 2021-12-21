@@ -17,8 +17,10 @@
 package org.jkiss.dbeaver.ui.navigator;
 
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.jkiss.dbeaver.model.app.DBPProject;
 import org.jkiss.dbeaver.model.app.DBPResourceCreator;
 import org.jkiss.dbeaver.model.app.DBPResourceHandler;
@@ -52,6 +54,14 @@ public class ResourcePropertyTester extends PropertyTester
             return false;
         }
         IResource resource = (IResource)receiver;
+        if (resource instanceof IFile){
+            final IFile iFile = (IFile) resource;
+            try {
+                iFile.getContentDescription();
+            } catch (CoreException e) {
+                return false;
+            }
+        }
         DBPWorkspace workspace = DBWorkbench.getPlatform().getWorkspace();
         DBPResourceHandler handler = workspace.getResourceHandler(resource);
         if (handler == null) {
